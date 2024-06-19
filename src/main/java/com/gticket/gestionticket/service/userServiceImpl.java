@@ -29,11 +29,11 @@ public class userServiceImpl implements UserService {
     public Utilisateur modifier(Long id, Utilisateur utilisateur) {
         return userRepository.findById(utilisateur.getId())
                 .map(user_existant->{
-            user_existant.setNom(utilisateur.getNom());
-            user_existant.setEmail(utilisateur.getEmail());
-            user_existant.setRole(utilisateur.getRole());
-            return userRepository.save(user_existant);
-        }).orElseThrow(()-> new RuntimeException("Utilisateur non trouvé"));
+                    user_existant.setNom(utilisateur.getNom());
+                    user_existant.setEmail(utilisateur.getEmail());
+                    user_existant.setRole(utilisateur.getRole());
+                    return userRepository.save(user_existant);
+                }).orElseThrow(()-> new RuntimeException("Utilisateur non trouvé"));
     }
 
     @Override
