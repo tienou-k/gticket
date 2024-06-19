@@ -4,7 +4,7 @@ package com.gticket.gestionticket.controller;
 import com.gticket.gestionticket.modele.Utilisateur;
 import com.gticket.gestionticket.service.UserService;
 import lombok.AllArgsConstructor;
-import lombok.Cleanup;
+
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
