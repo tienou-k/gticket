@@ -3,14 +3,12 @@ package com.gticket.gestionticket.modele;
 
 import jakarta.persistence.*;
 import java.util.Date;
-import lombok.Setter;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
 @Entity
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 public class Ticket {
     @Id
