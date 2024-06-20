@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public abstract class userServiceImpl implements UserService {
+public class userServiceImpl implements UserService {
 
     private final userRepository userRepository;
     private final AdminRepository adminRepository;
@@ -24,31 +24,34 @@ public abstract class userServiceImpl implements UserService {
 
     @Override
     public Utilisateur creer(Utilisateur utilisateur) {
-        Utilisateur savedUser = userRepository.save(utilisateur);
         switch (utilisateur.getRole()) {
             case Admin:
                 Admin admin = new Admin();
-                admin.setNom(savedUser.getNom());
-                admin.setEmail(savedUser.getEmail());
-                admin.setPassword(savedUser.getPassword());
-                admin.setRole(savedUser.getRole());
-                break;
+                admin.setNom(utilisateur.getNom());
+                admin.setEmail(utilisateur.getEmail());
+                admin.setPassword(utilisateur.getPassword());
+                admin.setRole(utilisateur.getRole());
+                return adminRepository.save(admin);
+
             case Formateur:
                 Formateur formateur = new Formateur();
-                formateur.setNom(savedUser.getNom());
-                formateur.setEmail(savedUser.getEmail());
-                formateur.setPassword(savedUser.getPassword());
-                formateur.setRole(savedUser.getRole());
-                break;
+                formateur.setNom(utilisateur.getNom());
+                formateur.setEmail(utilisateur.getEmail());
+                formateur.setPassword(utilisateur.getPassword());
+                formateur.setRole(utilisateur.getRole());
+                return formateurRepository.save(formateur);
+
             case Apprenant:
                 Apprenant apprenant = new Apprenant();
-                apprenant.setNom(savedUser.getNom());
-                apprenant.setEmail(savedUser.getEmail());
-                apprenant.setPassword(savedUser.getPassword());
-                apprenant.setRole(savedUser.getRole());
-                break;
+                apprenant.setNom(utilisateur.getNom());
+                apprenant.setEmail(utilisateur.getEmail());
+                apprenant.setPassword(utilisateur.getPassword());
+                apprenant.setRole(utilisateur.getRole());
+                return apprenantRepository.save(apprenant);
+
+            default:
+                throw new IllegalArgumentException("Type d'utilisateur non pris en charge: " + utilisateur.getRole());
         }
-        return savedUser;
     }
     @Override
     public List<Utilisateur> lire(){

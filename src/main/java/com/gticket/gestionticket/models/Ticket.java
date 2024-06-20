@@ -1,10 +1,14 @@
 package com.gticket.gestionticket.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 
 @Entity
@@ -26,9 +30,12 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     private Statut statut;
 
-    private Date dateCreation;
+
+    private LocalDateTime dateCreation;
+    private LocalDateTime dateMiseAJour;
 
     @ManyToOne
     @JoinColumn(name = "id_apprenant")
+    @JsonBackReference
     private Apprenant apprenant;
 }
