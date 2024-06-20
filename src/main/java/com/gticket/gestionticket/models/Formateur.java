@@ -1,4 +1,4 @@
-package com.gticket.gestionticket.modele;
+package com.gticket.gestionticket.models;
 
 import  jakarta.persistence.*;
 

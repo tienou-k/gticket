@@ -1,6 +1,6 @@
 package com.gticket.gestionticket.service;
 
-import com.gticket.gestionticket.modele.Formateur;
+import com.gticket.gestionticket.models.Formateur;
 import java.util.List;
 
 

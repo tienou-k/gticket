@@ -1,6 +1,6 @@
 package com.gticket.gestionticket.service;
 
-import com.gticket.gestionticket.modele.Apprenant;
+import com.gticket.gestionticket.models.Apprenant;
 import com.gticket.gestionticket.repository.ApprenantRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Role;

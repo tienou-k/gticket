@@ -1,6 +1,6 @@
 package com.gticket.gestionticket.service;
 
-import com.gticket.gestionticket.modele.Formateur;
+import com.gticket.gestionticket.models.Formateur;
 import com.gticket.gestionticket.repository.FormateurRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

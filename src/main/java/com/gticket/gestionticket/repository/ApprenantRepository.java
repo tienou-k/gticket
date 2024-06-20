@@ -1,6 +1,6 @@
 package com.gticket.gestionticket.repository;
 
-import com.gticket.gestionticket.modele.Apprenant;
+import com.gticket.gestionticket.models.Apprenant;
 import org.springframework.context.annotation.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 

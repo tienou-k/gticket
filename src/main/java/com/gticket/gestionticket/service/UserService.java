@@ -1,6 +1,7 @@
 package com.gticket.gestionticket.service;
 
-import com.gticket.gestionticket.modele.Utilisateur;
+import com.gticket.gestionticket.models.Role;
+import com.gticket.gestionticket.models.Utilisateur;
 import java.util.List;
 
 
@@ -9,5 +10,8 @@ public interface UserService {
     List<Utilisateur> lire();
     Utilisateur modifier(Long id, Utilisateur utilisateur);
     String supprimer(Long id);
+
+    // methode to retrieve users by their Role
+    List<Utilisateur> findByRole(Role role);
 
 }

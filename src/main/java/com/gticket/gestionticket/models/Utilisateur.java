@@ -1,7 +1,9 @@
-package com.gticket.gestionticket.modele;
+package com.gticket.gestionticket.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 
 @Data
@@ -14,12 +16,12 @@ public class Utilisateur {
     private String nom;
     private String email;
     private String password;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
+
+    @OneToMany(mappedBy = "apprenant")
+    private List<Ticket> tickets;
 }
 
-enum Role {
-    Apprenant,
-    Formateur,
-    Admin
-}
