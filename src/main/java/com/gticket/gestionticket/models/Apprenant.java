@@ -10,8 +10,8 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode
 public class Apprenant extends Utilisateur {
-    @OneToMany(mappedBy = "apprenant", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "apprenant")
+
     private List<Ticket> tickets;
 
 }

@@ -6,8 +6,14 @@ import com.gticket.gestionticket.models.Utilisateur;
 import com.gticket.gestionticket.service.UserService;
 import lombok.AllArgsConstructor;
 
+
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+
 import java.util.List;
+
+
 
 @RestController
 @RequestMapping("/users")
@@ -15,11 +21,14 @@ import java.util.List;
 public class userController {
     private final UserService userService;
 
-    @PostMapping("/create")
-    public Utilisateur create(@RequestBody Utilisateur utilisateur){
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Utilisateur create(@RequestBody Utilisateur utilisateur) {
 
         return userService.creer(utilisateur);
     }
+
+
+
 
     @GetMapping("/read")
     public List<Utilisateur> read(){

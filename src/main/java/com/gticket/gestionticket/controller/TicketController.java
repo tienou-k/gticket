@@ -1,48 +1,55 @@
 package com.gticket.gestionticket.controller;
 
-
-
 import com.gticket.gestionticket.models.Ticket;
 import com.gticket.gestionticket.service.TicketService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/tickets")
+@RequestMapping("/api/tickets")
 @AllArgsConstructor
 public class TicketController {
+
     private final TicketService ticketService;
 
-    @PostMapping("/create")
-    public Ticket create(@RequestBody Ticket ticket) {
-        return ticketService.creer(ticket);
+    @PostMapping(value = "/create-ticket", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Ticket> creerTicket(@RequestBody Ticket ticket) {
+        Ticket nouveauTicket = ticketService.creer(ticket);
+        return new ResponseEntity<>(nouveauTicket, HttpStatus.CREATED);
     }
 
-    @GetMapping("/readAll")
-    public List<Ticket> read() {
-        return ticketService.lire();
+    @GetMapping("/list-tickets")
+    public ResponseEntity<List<Ticket>> lireTickets() {
+        List<Ticket> tickets = ticketService.lire();
+        return ResponseEntity.ok(tickets);
     }
 
-    @GetMapping("/readCat/{category}")
-    public List<Ticket> readByCategory(@PathVariable String category) {
-        return ticketService.lireParCategorie(category);
+    @GetMapping("/categorie/{categorieName}")
+    public ResponseEntity<List<Ticket>> lireTicketsParCategorie(@PathVariable String categorieName) {
+        List<Ticket> tickets = ticketService.lireParCategorie(categorieName);
+        return ResponseEntity.ok(tickets);
     }
 
-    @GetMapping("/readAppr/{apprenantId}")
-    public List<Ticket> readByApprenant(@PathVariable Long apprenantId) {
-        return ticketService.lireParApprenant(apprenantId);
+    @GetMapping("/apprenant/{apprenantId}")
+    public ResponseEntity<List<Ticket>> lireTicketsParApprenant(@PathVariable Long apprenantId) {
+        List<Ticket> tickets = ticketService.lireParApprenant(apprenantId);
+        return ResponseEntity.ok(tickets);
     }
 
-
-    @PutMapping("/update/{id}")
-    public Ticket update(@PathVariable Long id, @RequestBody Ticket ticket) {
-        return ticketService.modifier(id, ticket);
+    @PutMapping("/modifier-ticket/{id}")
+    public ResponseEntity<Ticket> modifierTicket(@PathVariable Long id, @RequestBody Ticket modifT) {
+        modifT.setId(id);
+        Ticket ticket = ticketService.modifier(id,modifT);
+        return ResponseEntity.ok(ticket);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        return ticketService.supprimer(id);
+    @DeleteMapping("/supprimer-ticket/{id}")
+    public ResponseEntity<String> supprimerTicket(@PathVariable Long id) {
+        String message = ticketService.supprimer(id);
+        return ResponseEntity.ok(message);
     }
 }
