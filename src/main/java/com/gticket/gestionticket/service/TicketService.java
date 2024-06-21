@@ -8,7 +8,8 @@ import java.util.List;
 @Service
 public interface TicketService {
     Ticket creer(Ticket ticket);
-    List<Ticket> lireParApprenant(long Apprenant);
+
+    List<Ticket> lireParApprenant(String Apprenant);
 
     List<Ticket> lire();
 

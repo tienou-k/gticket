@@ -1,16 +1,12 @@
 package com.gticket.gestionticket.models;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-
 
 @Entity
 @Data
@@ -22,23 +18,26 @@ public class Ticket {
     private String titre;
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categorie")
-
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Ensure lazy loading properties are ignored
     private Categorie categorie;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "priorite")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Priorite priorite;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "statut")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Statut statut;
 
     private LocalDateTime dateCreation;
     private LocalDateTime dateMiseAJour;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "apprenant_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "apprenant")
+    @JsonBackReference
     private Apprenant apprenant;
 }

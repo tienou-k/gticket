@@ -58,7 +58,7 @@ public  class ServiceTicketImpl implements TicketService {
         }
 
     @Override
-    public List<Ticket> lireParApprenant(long Apprenant) {
+    public List<Ticket> lireParApprenant(String Apprenant) {
         return List.of();
     }
 

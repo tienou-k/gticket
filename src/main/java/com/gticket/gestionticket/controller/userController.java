@@ -7,7 +7,7 @@ import com.gticket.gestionticket.service.UserService;
 import lombok.AllArgsConstructor;
 
 
-import org.springframework.http.MediaType;
+
 import org.springframework.web.bind.annotation.*;
 
 
@@ -21,7 +21,7 @@ import java.util.List;
 public class userController {
     private final UserService userService;
 
-    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
     public Utilisateur create(@RequestBody Utilisateur utilisateur) {
 
         return userService.creer(utilisateur);
