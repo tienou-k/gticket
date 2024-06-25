@@ -1,9 +1,15 @@
 package com.gticket.gestionticket.models;
 
-public enum Role {
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-        Apprenant,
-        Formateur,
-        Admin
-
+@Entity
+@Data
+@NoArgsConstructor
+public class Role {
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+        private String nom;
 }

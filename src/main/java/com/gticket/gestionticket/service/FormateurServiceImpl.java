@@ -29,7 +29,7 @@ public class FormateurServiceImpl implements formateurService {
                 .map(formateurExistant -> {
                     formateurExistant.setNom(formateur.getNom());
                     formateurExistant.setEmail(formateur.getEmail());
-                    formateurExistant.setRole(formateur.getRole());
+                    formateurExistant.setRoles(formateur.getRoles());
                     return formateurRepository.save(formateurExistant);
                 }).orElseThrow(() -> new RuntimeException("Formateur non trouvé"));
     }

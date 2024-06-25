@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ApprenantRepository extends JpaRepository<Apprenant, Long> {
 
-    List<Apprenant> findByRole(Role role);
+    List<Apprenant> findByRoles(Role role);
 }

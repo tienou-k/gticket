@@ -3,8 +3,7 @@ package com.gticket.gestionticket.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-
+import java.util.Set;
 
 @Data
 @Entity
@@ -17,11 +16,11 @@ public class Utilisateur {
     private String email;
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-
-    @OneToMany(mappedBy = "apprenant")
-    private List<Ticket> tickets;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "utilisateur_roles",
+            joinColumns = @JoinColumn(name = "utilisateur_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 }
-

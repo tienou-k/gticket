@@ -19,6 +19,10 @@ public interface TicketService {
 
     List<Ticket> lireParApprenant(Long apprenantId);
 
+   // Ticket resolveTicket(Long id);
+
+    Ticket resolveTicket(Long id);
+
     Ticket modifier(Long id, Ticket ticket);
     String supprimer(Long id);
 }

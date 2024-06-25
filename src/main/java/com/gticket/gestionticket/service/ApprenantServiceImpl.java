@@ -30,7 +30,7 @@ public class ApprenantServiceImpl implements serviceApprenant {
                 .map(apprenantExistant -> {
                     apprenantExistant.setNom(apprenant.getNom());
                     apprenantExistant.setEmail(apprenant.getEmail());
-                    apprenantExistant.setRole(apprenant.getRole());
+                    apprenantExistant.setRoles(apprenant.getRoles());
                     return apprenantRepository.save(apprenantExistant);
                 }).orElseThrow(() -> new RuntimeException("Apprenant non trouvé"));
     }
@@ -48,6 +48,6 @@ public class ApprenantServiceImpl implements serviceApprenant {
 
     @Override
     public List<Apprenant> lireParRole(Role role) {
-        return apprenantRepository.findByRole(role);
+        return apprenantRepository.findByRoles(role);
     }
 }

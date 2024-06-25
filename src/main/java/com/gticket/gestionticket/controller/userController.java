@@ -1,15 +1,12 @@
 package com.gticket.gestionticket.controller;
 
 
-import com.gticket.gestionticket.models.Role;
 import com.gticket.gestionticket.models.Utilisateur;
 import com.gticket.gestionticket.service.UserService;
 import lombok.AllArgsConstructor;
-
-
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -19,7 +16,16 @@ import java.util.List;
 @RequestMapping("/users")
 @AllArgsConstructor
 public class userController {
-    private final UserService userService;
+    private UserService userService;
+
+
+    public void UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+
+
+
 
     @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
     public Utilisateur create(@RequestBody Utilisateur utilisateur) {
@@ -35,11 +41,12 @@ public class userController {
 
         return userService.lire();
     }
-    @GetMapping("/read/{role}")
-    public List<Utilisateur> readByRole(@PathVariable Role role) {
-        return userService.findByRole(role);
-    }
 
+    @GetMapping("/findByRole/{roleNom}")
+    public ResponseEntity<List<Utilisateur>> trouverUtilisateursParRole(@PathVariable("roleNom") String roleNom) {
+        List<Utilisateur> utilisateurs = userService.findByRole(roleNom);
+        return new ResponseEntity<>(utilisateurs, HttpStatus.OK);
+    }
 
     @PutMapping("/update/{id}")
     public Utilisateur update(@PathVariable Long id,@RequestBody Utilisateur utilisateur){

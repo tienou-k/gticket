@@ -3,10 +3,10 @@ package com.gticket.gestionticket.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -20,7 +20,7 @@ public class Ticket {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categorie")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Ensure lazy loading properties are ignored
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Categorie categorie;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,4 +40,9 @@ public class Ticket {
     @JoinColumn(name = "apprenant")
     @JsonBackReference
     private Apprenant apprenant;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Notification")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Notification notification;
 }
