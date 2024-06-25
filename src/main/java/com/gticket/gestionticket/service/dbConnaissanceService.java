@@ -15,5 +15,5 @@ public interface dbConnaissanceService {
 
     String supprimer(Long id);
 
-    BaseDeConnaissance save(BaseDeConnaissance baseDeConnaissance);
+
 }

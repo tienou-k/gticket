@@ -1,5 +1,6 @@
 package com.gticket.gestionticket.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,10 +17,12 @@ public class Formateur extends Utilisateur{
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_notification")
-    @JsonManagedReference
+    @JsonIgnoreProperties
     private List<Notification> notifications;
 
 
-    @OneToMany(mappedBy = "formateur", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_db")
+    @JsonIgnoreProperties
     private List<BaseDeConnaissance> baseDeConnaissances;
 }
