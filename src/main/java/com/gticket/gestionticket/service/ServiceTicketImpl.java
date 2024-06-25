@@ -19,46 +19,46 @@ public  class ServiceTicketImpl implements TicketService {
         private final CategorieRepository categorieRepository;
         private final StatutRepository statutRepository;
         private final PrioriteRepository prioriteRepository;
-        private final userRepository userRepository; // Assuming you have a UserRepository
-        private final EnvoyermailService emailService;
-    //private Object savedTicket;
+        private final userRepository userRepository;
+        private final EnvoyermailServiceImpl emailService;
+
 
     @Override
         @Transactional
         public Ticket creer(Ticket ticket) {
-            // Validate and fetch the Apprenant
+
             Apprenant apprenant = apprenantRepository.findById(ticket.getApprenant().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Apprenant non trouvé"));
             ticket.setApprenant(apprenant);
             ticket.setDateCreation(LocalDateTime.now());
 
-            // Fetch and set Categorie if provided
+
             if (ticket.getCategorie() != null && ticket.getStatut().getNom() != null) {
                 Categorie categorie = categorieRepository.findByNom(ticket.getCategorie().getNom())
                         .orElseThrow(() -> new IllegalArgumentException("Categorie non trouvée"));
                 ticket.setCategorie(categorie);
             }
 
-            // Fetch and set Priorite if provided
+
             if (ticket.getPriorite() != null && ticket.getPriorite().getNom() != null) {
                 Priorite priorite = prioriteRepository.findByNom(ticket.getPriorite().getNom())
                         .orElseThrow(() -> new IllegalArgumentException("Priorite non trouvée"));
                 ticket.setPriorite(priorite);
             }
 
-            // Fetch and set Statut if provided
+
             if (ticket.getStatut() != null && ticket.getStatut().getNom() != null) {
                 Statut statut = statutRepository.findByNom(ticket.getStatut().getNom())
                         .orElseThrow(() -> new IllegalArgumentException("Statut non trouvé"));
                 ticket.setStatut(statut);
             }
 
-        // Set default Statut to "ouvert"
+
         Statut statutOuvert = statutRepository.findByNom("ouvert")
                 .orElseThrow(() -> new IllegalArgumentException("Statut 'ouvert' non trouvé"));
         ticket.setStatut(statutOuvert);
 
-        // Save the ticket
+
         Ticket savedTicket = ticketRepository.save(ticket);
 
 
@@ -67,7 +67,7 @@ public  class ServiceTicketImpl implements TicketService {
             String subject = "Nouveau Ticket: " + savedTicket.getTitre();
             String text = "Un nouveau ticket a été crée. Please check the details.";
 
-            adminsAndFormateurs.forEach(user -> emailService.envoyerEmail(user.getEmail(), subject, text));
+            adminsAndFormateurs.forEach(user -> emailService.envoyerMail(user.getEmail(), subject, text));
 
             //
             return ticketRepository.save(ticket);
@@ -117,13 +117,13 @@ public  class ServiceTicketImpl implements TicketService {
 
                     Ticket resolvedTicket = ticketRepository.save(ticket);
 
-                    // Notify apprennat about ticket resolution
+
                     List<Utilisateur> Apprenant = userRepository.findByRoles_NomIn(List.of( "Apprenant"));
                     String subject = "Ticket Résolu: " + resolvedTicket.getTitre();
                     String text = "Un ticket à été résolu . Verifier les détails.!";
 
                     Apprenant.forEach(user ->
-                        emailService.sendEmail(user.getEmail(), subject, text)
+                        emailService.envoyerMail(user.getEmail(), subject, text)
                     );
 
                     return resolvedTicket;

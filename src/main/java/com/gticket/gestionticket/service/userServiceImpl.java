@@ -85,10 +85,10 @@ public class userServiceImpl implements UserService {
         }
     @Override
     public List<Utilisateur> findByRole(String roleNom) {
-        // Utilisez votre méthode de recherche personnalisée dans le repository de rôle
+
         List<Role> roles = RoleRpository.findByNom(roleNom);
 
-        // Récupérez tous les utilisateurs ayant un des rôles trouvés
+
         return userRepository.findByRolesIn(roles);
     }
 

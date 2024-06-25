@@ -18,7 +18,7 @@ public class TicketController {
 
     @PostMapping("/create-ticket")
     public ResponseEntity<Ticket> creerTicket(@RequestBody Ticket ticket) {
-        System.out.println("Content-Type: application/json");
+        //System.out.println("Content-Type: application/json");
         Ticket nouveauTicket = ticketService.creer(ticket);
         return new ResponseEntity<>(nouveauTicket, HttpStatus.CREATED);
     }

@@ -19,7 +19,6 @@ public interface TicketService {
 
     List<Ticket> lireParApprenant(Long apprenantId);
 
-   // Ticket resolveTicket(Long id);
 
     Ticket resolveTicket(Long id);
 
