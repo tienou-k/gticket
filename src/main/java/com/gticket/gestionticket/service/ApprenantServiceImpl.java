@@ -10,12 +10,13 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ApprenantServiceImpl implements serviceApprenant {
+public class ApprenantServiceImpl implements ApprenantService {
 
     private final ApprenantRepository apprenantRepository;
 
     @Override
     public Apprenant creer(Apprenant apprenant) {
+
         return apprenantRepository.save(apprenant);
     }
 
@@ -41,7 +42,7 @@ public class ApprenantServiceImpl implements serviceApprenant {
         return "Apprenant supprimé !";
     }
 
-    @Override
+    /*@Override
     public List<Apprenant> lireParRole(String role) {
         return List.of();
     }
@@ -49,5 +50,5 @@ public class ApprenantServiceImpl implements serviceApprenant {
     @Override
     public List<Apprenant> lireParRole(Role role) {
         return apprenantRepository.findByRoles(role);
-    }
+    }*/
 }

@@ -3,7 +3,6 @@ package com.gticket.gestionticket.service;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import com.gticket.gestionticket.service.EmailService;
 import org.springframework.stereotype.Service;
 
 
@@ -18,7 +17,7 @@ private final JavaMailSender envoyeurEmail;
     @Override
     public void envoyerMail(String a, String Tittre, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom("");
+        mailMessage.setFrom("alextienou14@gmail.com");
         mailMessage.setTo(a);
         mailMessage.setSubject(Tittre);
         mailMessage.setText(message);

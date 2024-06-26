@@ -13,6 +13,7 @@ import java.util.List;
 
 
 @RestController
+
 @RequestMapping("/api/users")
 @AllArgsConstructor
 public class userController {
@@ -29,8 +30,8 @@ public class userController {
 
     @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
     public Utilisateur create(@RequestBody Utilisateur utilisateur) {
-
-        return userService.creer(utilisateur);
+        Utilisateur newUser = userService.creer(utilisateur);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED).getBody();
     }
 
 
@@ -44,7 +45,7 @@ public class userController {
 
     @GetMapping("/listRole/{roleNom}")
     public ResponseEntity<List<Utilisateur>> trouverUtilisateursParRole(@PathVariable("roleNom") String roleNom) {
-        List<Utilisateur> utilisateurs = userService.findByRole(roleNom);
+        List<Utilisateur> utilisateurs = userService.findByRolesIn(roleNom);
         return new ResponseEntity<>(utilisateurs, HttpStatus.OK);
     }
 

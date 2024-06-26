@@ -6,7 +6,7 @@ import com.gticket.gestionticket.repository.AdminRepository;
 import com.gticket.gestionticket.repository.ApprenantRepository;
 import com.gticket.gestionticket.repository.FormateurRepository;
 import com.gticket.gestionticket.repository.userRepository;
-import com.gticket.gestionticket.repository.RoleRpository;
+import com.gticket.gestionticket.repository.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,80 +18,88 @@ import java.util.Set;
 @AllArgsConstructor
 public class userServiceImpl implements UserService {
 
-    private final userRepository userRepository;
-    private final AdminRepository adminRepository;
-    private final FormateurRepository formateurRepository;
-    private final ApprenantRepository apprenantRepository;
+        private final userRepository userRepository;
+        private final AdminRepository adminRepository;
+        private final FormateurRepository formateurRepository;
+        private final ApprenantRepository apprenantRepository;
+        private final RoleRepository roleRepository;
 
+        @Override
+        public Utilisateur creer(Utilisateur utilisateur) {
+            Set<Role> roles = utilisateur.getRoles();
 
-    @Override
-    public Utilisateur creer(Utilisateur utilisateur) {
-        Set<Role> roles = utilisateur.getRoles();
-        if (roles.isEmpty()) {
-            throw new IllegalArgumentException("L'utilisateur doit avoir au moins un rôle");
-        }
+            if (roles.isEmpty()) {
+                throw new IllegalArgumentException("L'utilisateur doit avoir au moins un rôle");
+            }
 
-        for (Role role : roles) {
-            switch (role.getNom()) {
+            Role getRole = roles.iterator().next();
+
+            Utilisateur savedUser;
+
+            switch (getRole.getNom()) {
                 case "Admin":
                     Admin admin = new Admin();
                     copierUtilisateur(admin, utilisateur);
-                    return adminRepository.save(admin);
+                    savedUser = adminRepository.save(admin);
+                    break;
 
                 case "Formateur":
                     Formateur formateur = new Formateur();
                     copierUtilisateur(formateur, utilisateur);
-                    return formateurRepository.save(formateur);
+                    savedUser = formateurRepository.save(formateur);
+                    break;
 
                 case "Apprenant":
                     Apprenant apprenant = new Apprenant();
                     copierUtilisateur(apprenant, utilisateur);
-                    return apprenantRepository.save(apprenant);
+                    savedUser = apprenantRepository.save(apprenant);
+                    break;
 
                 default:
-                    throw new IllegalArgumentException("Type d'utilisateur non pris en charge: " + role.getNom());
+                    throw new IllegalArgumentException("Type d'utilisateur non pris en charge: " + getRole.getNom());
             }
+
+            return savedUser;
         }
 
-        throw new IllegalArgumentException("Aucun rôle spécifié pour l'utilisateur");
-    }
+        private void copierUtilisateur(Utilisateur dest, Utilisateur src) {
+            dest.setNom(src.getNom());
+            dest.setEmail(src.getEmail());
+            dest.setPassword(src.getPassword());
+            dest.setRoles(src.getRoles());
+        }
 
-    // Méthode utilitaire pour copier les données de l'utilisateur vers un utilisateur spécifique (Admin, Formateur, Apprenant)
-    private void copierUtilisateur(Utilisateur dest, Utilisateur src) {
-        dest.setNom(src.getNom());
-        dest.setEmail(src.getEmail());
-        dest.setPassword(src.getPassword());
-        dest.setRoles(src.getRoles());
-    }
         @Override
-        public List<Utilisateur> lire () {
+        public List<Utilisateur> lire() {
             return userRepository.findAll();
         }
 
         @Override
-        public Utilisateur modifier (Long id, Utilisateur utilisateur){
+        public Utilisateur modifier(Long id, Utilisateur utilisateur) {
             return userRepository.findById(id)
-                    .map(user_existant -> {
-                        user_existant.setNom(utilisateur.getNom());
-                        user_existant.setEmail(utilisateur.getEmail());
-                        user_existant.setRoles(utilisateur.getRoles());
-                        return userRepository.save(user_existant);
+                    .map(userExistant -> {
+                        userExistant.setNom(utilisateur.getNom());
+                        userExistant.setEmail(utilisateur.getEmail());
+                        userExistant.setRoles(utilisateur.getRoles());
+                        return userRepository.save(userExistant);
                     }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
         }
+
         @Override
-        public String supprimer (Long id){
+        public String supprimer(Long id) {
             userRepository.deleteById(id);
             return "Utilisateur supprimé !";
         }
-    @Override
-    public List<Utilisateur> findByRole(String roleNom) {
 
-        List<Role> roles = RoleRpository.findByNom(roleNom);
+        @Override
+        public List<Utilisateur> findByRolesIn(String roleNom) {
+            List<Role> roles = roleRepository.findByNom(roleNom);
+            return userRepository.findByRolesIn(roles);
+        }
 
-
-        return userRepository.findByRolesIn(roles);
-    }
-
-
+        @Override
+        public List<Utilisateur> findByRole(String roleNom) {
+            List<Role> roles = roleRepository.findByNom(roleNom);
+            return userRepository.findByRolesIn(roles);
+        }
 }
-

@@ -3,6 +3,7 @@ package com.gticket.gestionticket.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+
 import java.util.Set;
 
 @Data
@@ -23,4 +24,6 @@ public class Utilisateur {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+
 }

@@ -24,58 +24,55 @@ public  class ServiceTicketImpl implements TicketService {
 
 
     @Override
-        @Transactional
-        public Ticket creer(Ticket ticket) {
+    @Transactional
+    public Ticket creer(Ticket ticket) {
 
-            Apprenant apprenant = apprenantRepository.findById(ticket.getApprenant().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Apprenant non trouvé"));
-            ticket.setApprenant(apprenant);
-            ticket.setDateCreation(LocalDateTime.now());
-
-
-            if (ticket.getCategorie() != null && ticket.getStatut().getNom() != null) {
-                Categorie categorie = categorieRepository.findByNom(ticket.getCategorie().getNom())
-                        .orElseThrow(() -> new IllegalArgumentException("Categorie non trouvée"));
-                ticket.setCategorie(categorie);
-            }
+        Apprenant apprenant = apprenantRepository.findById(ticket.getApprenant().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Apprenant non trouvé"));
+        ticket.setApprenant(apprenant);
 
 
-            if (ticket.getPriorite() != null && ticket.getPriorite().getNom() != null) {
-                Priorite priorite = prioriteRepository.findByNom(ticket.getPriorite().getNom())
-                        .orElseThrow(() -> new IllegalArgumentException("Priorite non trouvée"));
-                ticket.setPriorite(priorite);
-            }
+        ticket.setDateCreation(LocalDateTime.now());
 
 
-            if (ticket.getStatut() != null && ticket.getStatut().getNom() != null) {
-                Statut statut = statutRepository.findByNom(ticket.getStatut().getNom())
-                        .orElseThrow(() -> new IllegalArgumentException("Statut non trouvé"));
-                ticket.setStatut(statut);
-            }
+        if (ticket.getCategorie() != null && ticket.getCategorie().getId() != null) {
+            Categorie categorie = categorieRepository.findById(ticket.getCategorie().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categorie non trouvée"));
+            ticket.setCategorie(categorie);
+        }
+
+        if (ticket.getPriorite() != null && ticket.getPriorite().getId() != null) {
+            Priorite priorite = prioriteRepository.findById(ticket.getPriorite().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Priorite non trouvée"));
+            ticket.setPriorite(priorite);
+        }
 
 
-        Statut statutOuvert = statutRepository.findByNom("ouvert")
-                .orElseThrow(() -> new IllegalArgumentException("Statut 'ouvert' non trouvé"));
-        ticket.setStatut(statutOuvert);
+        if (ticket.getStatut() != null && ticket.getStatut().getId() != null) {
+            Statut statut = statutRepository.findById(ticket.getStatut().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Statut non trouvé"));
+            ticket.setStatut(statut);
+        } else {
+
+            Statut statutOuvert = statutRepository.findByNom("Ouvert")
+                    .orElseThrow(() -> new IllegalArgumentException("Statut 'Ouvert' non trouvé"));
+            ticket.setStatut(statutOuvert);
+        }
 
 
         Ticket savedTicket = ticketRepository.save(ticket);
 
 
+        List<Utilisateur> adminsAndFormateurs = userRepository.findByRoles_NomIn(List.of("Admin", "Formateur"));
+        String Titre = "Nouveau Ticket: " + savedTicket.getTitre();
+        String message = "Un nouveau ticket a été créé. Veuillez vérifier les détails.";
 
-            List<Utilisateur> adminsAndFormateurs = userRepository.findByRoles_NomIn(List.of("Admin", "Formateur"));
-            String subject = "Nouveau Ticket: " + savedTicket.getTitre();
-            String text = "Un nouveau ticket a été crée. Please check the details.";
+        adminsAndFormateurs.forEach(user -> emailService.envoyerMail(user.getEmail(), Titre, message));
 
-            adminsAndFormateurs.forEach(user -> emailService.envoyerMail(user.getEmail(), subject, text));
+        return savedTicket;
+    }
 
-            //
-            return ticketRepository.save(ticket);
-        }
 
-  /*"  private String savedTicket() {
-        return null;
-    }"*/
 
     @Override
     public List<Ticket> lireParApprenant(String Apprenant) {

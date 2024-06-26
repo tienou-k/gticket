@@ -30,5 +30,9 @@ public class Notification {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Formateur formateur;
 
+
+    @ManyToOne
+    private Apprenant recipient;
+
 }
 

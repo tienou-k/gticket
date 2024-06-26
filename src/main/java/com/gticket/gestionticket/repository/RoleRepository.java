@@ -7,11 +7,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RoleRpository extends JpaRepository<Role, Long> {
+public interface RoleRepository extends JpaRepository<Role, Long> {
 
-    static List<Role> findByNom(String nom){
-        return null;
-    }
+     List<Role> findByNom(String nom);
+
+
+
 
     // ............
 }

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Role;
 import java.util.List;
 
 
-public interface serviceApprenant {
+public interface ApprenantService {
 
     Apprenant creer(Apprenant apprenant);
 
@@ -16,7 +16,7 @@ public interface serviceApprenant {
 
     String supprimer(Long id);
 
-    List<Apprenant> lireParRole(String role);
+   /* List<Apprenant> lireParRole(String role);
 
-    List<Apprenant> lireParRole(Role role);
+    List<Apprenant> lireParRole(Role role);*/
 }
