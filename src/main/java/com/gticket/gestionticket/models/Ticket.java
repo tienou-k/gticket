@@ -18,15 +18,18 @@ public class Ticket {
     private String titre;
     private String description;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categorie")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Categorie categorie;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "priorite")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Priorite priorite;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "statut")
@@ -36,10 +39,12 @@ public class Ticket {
     private LocalDateTime dateCreation;
     private LocalDateTime dateMiseAJour;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apprenant")
     @JsonBackReference
     private Apprenant apprenant;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Notification")

@@ -13,7 +13,6 @@ import java.util.List;
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
 
-
     @Override
     public Notification creer(Notification notification) {
         return notificationRepository.save(notification);
@@ -26,6 +25,7 @@ public class NotificationServiceImpl implements NotificationService {
     public Notification modifier(Long id, Notification notification) {
         return notificationRepository.save(notification);
     }
+
 
     @Override
     public String supprimer(Long id){

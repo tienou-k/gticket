@@ -17,48 +17,40 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 public class userServiceImpl implements UserService {
-
         private final userRepository userRepository;
         private final AdminRepository adminRepository;
         private final FormateurRepository formateurRepository;
         private final ApprenantRepository apprenantRepository;
         private final RoleRepository roleRepository;
 
+
         @Override
         public Utilisateur creer(Utilisateur utilisateur) {
             Set<Role> roles = utilisateur.getRoles();
-
             if (roles.isEmpty()) {
                 throw new IllegalArgumentException("L'utilisateur doit avoir au moins un rôle");
             }
-
             Role getRole = roles.iterator().next();
-
             Utilisateur savedUser;
-
             switch (getRole.getNom()) {
                 case "Admin":
                     Admin admin = new Admin();
                     copierUtilisateur(admin, utilisateur);
                     savedUser = adminRepository.save(admin);
                     break;
-
                 case "Formateur":
                     Formateur formateur = new Formateur();
                     copierUtilisateur(formateur, utilisateur);
                     savedUser = formateurRepository.save(formateur);
                     break;
-
                 case "Apprenant":
                     Apprenant apprenant = new Apprenant();
                     copierUtilisateur(apprenant, utilisateur);
                     savedUser = apprenantRepository.save(apprenant);
                     break;
-
                 default:
                     throw new IllegalArgumentException("Type d'utilisateur non pris en charge: " + getRole.getNom());
             }
-
             return savedUser;
         }
 
@@ -74,6 +66,7 @@ public class userServiceImpl implements UserService {
             return userRepository.findAll();
         }
 
+
         @Override
         public Utilisateur modifier(Long id, Utilisateur utilisateur) {
             return userRepository.findById(id)
@@ -85,17 +78,20 @@ public class userServiceImpl implements UserService {
                     }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
         }
 
+
         @Override
         public String supprimer(Long id) {
             userRepository.deleteById(id);
             return "Utilisateur supprimé !";
         }
 
+
         @Override
         public List<Utilisateur> findByRolesIn(String roleNom) {
             List<Role> roles = roleRepository.findByNom(roleNom);
             return userRepository.findByRolesIn(roles);
         }
+
 
         @Override
         public List<Utilisateur> findByRole(String roleNom) {

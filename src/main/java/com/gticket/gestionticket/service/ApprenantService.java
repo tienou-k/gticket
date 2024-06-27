@@ -9,14 +9,9 @@ import java.util.List;
 public interface ApprenantService {
 
     Apprenant creer(Apprenant apprenant);
-
     List<Apprenant> lire();
-
     Apprenant modifier(Long id, Apprenant apprenant);
-
     String supprimer(Long id);
 
-   /* List<Apprenant> lireParRole(String role);
 
-    List<Apprenant> lireParRole(Role role);*/
 }

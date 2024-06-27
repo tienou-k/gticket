@@ -18,12 +18,11 @@ public class Notification {
     private Date dateDeNotification;
 
 
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_ticket")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public Ticket ticket;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_formateur")
@@ -31,8 +30,6 @@ public class Notification {
     private Formateur formateur;
 
 
-    @ManyToOne
-    private Apprenant recipient;
 
 }
 

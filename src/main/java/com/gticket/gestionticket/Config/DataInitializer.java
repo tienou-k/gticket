@@ -24,13 +24,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-
         initializeRoles();
-
         initializeStatuts();
-
         initializeCategories();
-
         initializePriorites();
     }
 
@@ -46,6 +42,7 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
+
     private void initializeStatuts() {
         if (statutRepository.findByNom("Ouvert").isEmpty()) {
             statutRepository.save(new Statut("Ouvert"));
@@ -58,6 +55,7 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
+
     private void initializeCategories() {
         if (categorieRepository.findByNom("Technique").isEmpty()) {
             categorieRepository.save(new Categorie("Technique"));
@@ -69,6 +67,7 @@ public class DataInitializer implements CommandLineRunner {
             categorieRepository.save(new Categorie("Pratique"));
         }
     }
+
 
     private void initializePriorites() {
         if (prioriteRepository.findByNom("Urgent").isEmpty()) {

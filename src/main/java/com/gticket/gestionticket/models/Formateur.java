@@ -13,7 +13,6 @@ import java.util.List;
 public class Formateur extends Utilisateur{
 
 
-
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_notification")
     @JsonIgnoreProperties

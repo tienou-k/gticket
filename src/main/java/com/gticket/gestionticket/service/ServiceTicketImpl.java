@@ -20,58 +20,36 @@ public  class ServiceTicketImpl implements TicketService {
         private final StatutRepository statutRepository;
         private final PrioriteRepository prioriteRepository;
         private final userRepository userRepository;
-        private final EnvoyermailServiceImpl emailService;
 
 
     @Override
     @Transactional
     public Ticket creer(Ticket ticket) {
-
         Apprenant apprenant = apprenantRepository.findById(ticket.getApprenant().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Apprenant non trouvé"));
         ticket.setApprenant(apprenant);
-
-
         ticket.setDateCreation(LocalDateTime.now());
-
-
         if (ticket.getCategorie() != null && ticket.getCategorie().getId() != null) {
             Categorie categorie = categorieRepository.findById(ticket.getCategorie().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Categorie non trouvée"));
             ticket.setCategorie(categorie);
         }
-
         if (ticket.getPriorite() != null && ticket.getPriorite().getId() != null) {
             Priorite priorite = prioriteRepository.findById(ticket.getPriorite().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Priorite non trouvée"));
             ticket.setPriorite(priorite);
         }
-
-
         if (ticket.getStatut() != null && ticket.getStatut().getId() != null) {
             Statut statut = statutRepository.findById(ticket.getStatut().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Statut non trouvé"));
             ticket.setStatut(statut);
         } else {
-
             Statut statutOuvert = statutRepository.findByNom("Ouvert")
                     .orElseThrow(() -> new IllegalArgumentException("Statut 'Ouvert' non trouvé"));
             ticket.setStatut(statutOuvert);
         }
-
-
-        Ticket savedTicket = ticketRepository.save(ticket);
-
-
-        List<Utilisateur> adminsAndFormateurs = userRepository.findByRoles_NomIn(List.of("Admin", "Formateur"));
-        String Titre = "Nouveau Ticket: " + savedTicket.getTitre();
-        String message = "Un nouveau ticket a été créé. Veuillez vérifier les détails.";
-
-        adminsAndFormateurs.forEach(user -> emailService.envoyerMail(user.getEmail(), Titre, message));
-
-        return savedTicket;
+        return ticketRepository.save(ticket);
     }
-
 
 
     @Override
@@ -85,12 +63,14 @@ public  class ServiceTicketImpl implements TicketService {
             return ticketRepository.findAll();
         }
 
+
         @Override
         public List<Ticket> lireParCategorie(String categorieNom) {
             Categorie categorie = categorieRepository.findByNom(categorieNom)
                     .orElseThrow(() -> new IllegalArgumentException("Categorie non trouvée"));
             return ticketRepository.findByCategorie(categorie);
         }
+
 
         @Override
         public List<Ticket> lireParPriorite(String prioriteNom) {
@@ -99,10 +79,13 @@ public  class ServiceTicketImpl implements TicketService {
             return ticketRepository.findByPriorite(priorite);
         }
 
+
     @Override
     public List<Ticket> lireParApprenant(Long apprenantId) {
         return ticketRepository.findByApprenantId(apprenantId);
     }
+
+
     @Override
     public Ticket resolveTicket(Long id) {
         return ticketRepository.findById(id)
@@ -111,23 +94,9 @@ public  class ServiceTicketImpl implements TicketService {
                             .orElseThrow(() -> new IllegalArgumentException("Statut 'Résolu' non trouvé"));
                     ticket.setStatut(statutResolu);
                     ticket.setDateMiseAJour(LocalDateTime.now());
-
-                    Ticket resolvedTicket = ticketRepository.save(ticket);
-
-
-                    List<Utilisateur> Apprenant = userRepository.findByRoles_NomIn(List.of( "Apprenant"));
-                    String subject = "Ticket Résolu: " + resolvedTicket.getTitre();
-                    String text = "Un ticket à été résolu . Verifier les détails.!";
-
-                    Apprenant.forEach(user ->
-                        emailService.envoyerMail(user.getEmail(), subject, text)
-                    );
-
-                    return resolvedTicket;
+                    return ticketRepository.save(ticket);
                 }).orElseThrow(() -> new RuntimeException("Ticket non trouvé"));
     }
-
-
 
 
 
@@ -156,6 +125,8 @@ public  class ServiceTicketImpl implements TicketService {
                     })
                     .orElseThrow(() -> new IllegalArgumentException("Ticket non trouvé"));
         }
+
+
     @Override
     public String supprimer(Long id){
         ticketRepository.deleteById(id);

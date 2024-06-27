@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,17 +22,19 @@ public class securityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
     throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/api/users/**").hasRole("Admin")
-                        .requestMatchers("/api/db/**").hasAnyRole("Admin", "Formateur", "Apprenant")
-                        .requestMatchers("/api/Notification/").hasAnyRole("Formateur", "Apprenant")
-                        .requestMatchers("/api/tickets/").hasAnyRole("Admin", "Formateur", "Apprenant")
+                        .requestMatchers("/api/users/list").hasAnyRole("Admin","Formateur", "Apprenant")
+                        .requestMatchers("/api/db/**").hasAnyRole("Admin", "Formateur")
+                        .requestMatchers("/api/db/list-db").hasAnyRole("Admin", "Formateur", "Apprenant")
+                        .requestMatchers("/api/Notification/**").hasRole("Formateur")
+                        .requestMatchers("/api/Notification/list-notication").hasAnyRole("Admin","Formateur", "Apprenant")
+                        .requestMatchers("/api/tickets/").hasRole("Apprenant")
                         .requestMatchers("/api/tickets/list-tickets").hasAnyRole("Admin", "Formateur", "Apprenant")
-                        .requestMatchers("/api/tickets/create-ticket").hasRole("Apprenant")
                         .anyRequest().fullyAuthenticated()
                 )
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(Customizer.withDefaults()).formLogin(Customizer.withDefaults());
         return http.build();
     }
     @Bean
@@ -39,7 +42,7 @@ public class securityConfiguration {
         UserDetails apprenant = User.withDefaultPasswordEncoder()
                 .username("AAA")
                 .password("a-123")
-                .roles("Aprennant")
+                .roles("Apprenant")
                 .build();
         UserDetails formateur = User.withDefaultPasswordEncoder()
                 .username("FFF")
