@@ -2,8 +2,12 @@ package com.gticket.gestionticket.service;
 
 import com.gticket.gestionticket.models.*;
 import com.gticket.gestionticket.repository.*;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +24,7 @@ public  class ServiceTicketImpl implements TicketService {
         private final StatutRepository statutRepository;
         private final PrioriteRepository prioriteRepository;
         private final userRepository userRepository;
+    private final JavaMailSenderImpl mailSender;
 
 
     @Override
@@ -87,15 +92,43 @@ public  class ServiceTicketImpl implements TicketService {
 
 
     @Override
-    public Ticket resolveTicket(Long id) {
+    public Ticket ResoluTicket(Long id, Long formateurId) {
+        Formateur formateur = (Formateur) userRepository.findById(formateurId)
+                .filter(user -> user.getRoles().stream().anyMatch(role -> role.getNom().equals("Formateur")))
+                .orElseThrow(() -> new IllegalArgumentException("Formateur non trouvé ou non autorisé"));
+
         return ticketRepository.findById(id)
                 .map(ticket -> {
                     Statut statutResolu = statutRepository.findByNom("Résolu")
                             .orElseThrow(() -> new IllegalArgumentException("Statut 'Résolu' non trouvé"));
                     ticket.setStatut(statutResolu);
                     ticket.setDateMiseAJour(LocalDateTime.now());
-                    return ticketRepository.save(ticket);
+                    Ticket updatedTicket = ticketRepository.save(ticket);
+                    try {
+                        sendResolutionEmail(ticket);
+                    } catch (MessagingException e) {
+                        throw new RuntimeException("Failed to send email", e);
+                    }
+                    return updatedTicket;
                 }).orElseThrow(() -> new RuntimeException("Ticket non trouvé"));
+    }
+
+    private void sendResolutionEmail(Ticket ticket) throws MessagingException {
+        Apprenant apprenant = ticket.getApprenant();
+        String email = apprenant.getEmail();
+        String subject = "Votre ticket a été résolu";
+        String body = "Bonjour " + apprenant.getNom() + ",\n\n" +
+                "Votre ticket '" + ticket.getTitre() + "' a été résolu.\n\n" +
+                "Merci,\n" +
+                "L'équipe de gestion des tickets";
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper();
+        helper.setTo(email);
+        helper.setSubject(subject);
+        helper.setText(body);
+
+        mailSender.send(message);
     }
 
 
@@ -132,4 +165,17 @@ public  class ServiceTicketImpl implements TicketService {
         ticketRepository.deleteById(id);
         return "Ticket supprimé !";
     }
-   }
+
+    @Override
+    public String changerStatut(Long id) {
+        return ticketRepository.findById(id)
+                .map(ticket -> {
+                    Statut statutEnCours = statutRepository.findByNom("En cours")
+                            .orElseThrow(() -> new IllegalArgumentException("Statut 'En cours' non trouvé"));
+                    ticket.setStatut(statutEnCours);
+                    ticket.setDateMiseAJour(LocalDateTime.now());
+                    ticketRepository.save(ticket);
+                    return "Statut du ticket mis à jour à 'En cours'";
+                }).orElseThrow(() -> new RuntimeException("Ticket non trouvé"));
+    }
+}

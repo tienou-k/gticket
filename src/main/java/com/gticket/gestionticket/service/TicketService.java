@@ -14,7 +14,8 @@ public interface TicketService {
     List<Ticket> lireParCategorie(String category);
     List<Ticket> lireParPriorite(String priorite);
     List<Ticket> lireParApprenant(Long apprenantId);
-    Ticket resolveTicket(Long id);
+    Ticket ResoluTicket(Long id, Long formateurId);
     Ticket modifier(Long id, Ticket ticket);
     String supprimer(Long id);
+    String changerStatut(Long id);
 }

@@ -44,7 +44,7 @@ public class userController {
     @ApiResponses({@ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = userController.class), mediaType = "application/json") }),})
     @GetMapping("/list")
     public List<Utilisateur> read(
-            @Parameter(description = "Recherche par role") @RequestParam(required =true ) String title,
+          //
             @Parameter(description = "Recherche par Email", required =false ) @RequestParam(defaultValue = "abc@example.mail.com") String page)
     {
 

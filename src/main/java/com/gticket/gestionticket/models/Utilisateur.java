@@ -27,4 +27,7 @@ public class Utilisateur {
     private Set<Role> roles;
 
 
+   /* public String setRoles() {
+        return roles.toString();
+    }*/
 }

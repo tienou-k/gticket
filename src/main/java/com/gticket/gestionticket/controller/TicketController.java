@@ -61,4 +61,19 @@ public class TicketController {
         String message = ticketService.supprimer(id);
         return ResponseEntity.ok(message);
     }
+
+
+    @Operation(summary = "Changer d'un ticket ", description = " ")
+    @DeleteMapping("/changerStatuttTicket/{id}")
+    public ResponseEntity<String> changerStatut(@PathVariable Long id) {
+        String message = ticketService.changerStatut(id);
+        return ResponseEntity.ok(message);
+    }
+
+    @Operation(summary = "Résolution d'un ticket", description = " ")
+    @PutMapping("/resoudre-ticket/{id}/{formateurId}")
+    public ResponseEntity<Ticket> resoudreTicket(@PathVariable Long id, @PathVariable Long formateurId) {
+        Ticket ticket = ticketService.ResoluTicket(id, formateurId);
+        return ResponseEntity.ok(ticket);
+    }
 }
