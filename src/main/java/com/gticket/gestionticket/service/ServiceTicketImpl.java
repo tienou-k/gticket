@@ -123,7 +123,7 @@ public  class ServiceTicketImpl implements TicketService {
                 "L'équipe de gestion des tickets";
 
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setTo(email);
         helper.setSubject(subject);
         helper.setText(body);
@@ -167,15 +167,17 @@ public  class ServiceTicketImpl implements TicketService {
     }
 
     @Override
-    public String changerStatut(Long id) {
-        return ticketRepository.findById(id)
-                .map(ticket -> {
-                    Statut statutEnCours = statutRepository.findByNom("En cours")
-                            .orElseThrow(() -> new IllegalArgumentException("Statut 'En cours' non trouvé"));
-                    ticket.setStatut(statutEnCours);
-                    ticket.setDateMiseAJour(LocalDateTime.now());
-                    ticketRepository.save(ticket);
-                    return "Statut du ticket mis à jour à 'En cours'";
-                }).orElseThrow(() -> new RuntimeException("Ticket non trouvé"));
+    public String changerStatut(Long id, String newStatutNom) {
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ticket non trouvé"));
+
+        Statut newStatut = statutRepository.findByNom(newStatutNom)
+                .orElseThrow(() -> new IllegalArgumentException("Statut '" + newStatutNom + "' non trouvé"));
+
+        ticket.setStatut(newStatut);
+        ticket.setDateMiseAJour(LocalDateTime.now());
+        ticketRepository.save(ticket);
+
+        return "Statut du ticket (ID: " + id + ") mis à jour à '" + newStatutNom + "'";
     }
 }

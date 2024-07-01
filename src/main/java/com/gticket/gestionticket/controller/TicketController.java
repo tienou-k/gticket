@@ -64,9 +64,9 @@ public class TicketController {
 
 
     @Operation(summary = "Changer d'un ticket ", description = " ")
-    @DeleteMapping("/changerStatuttTicket/{id}")
-    public ResponseEntity<String> changerStatut(@PathVariable Long id) {
-        String message = ticketService.changerStatut(id);
+    @PutMapping("/changerStatut/{id}")
+    public ResponseEntity<String> changerStatut(@PathVariable Long id, @RequestParam String newStatutNom) {
+        String message = ticketService.changerStatut( id,  newStatutNom);
         return ResponseEntity.ok(message);
     }
 

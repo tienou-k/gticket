@@ -17,5 +17,6 @@ public interface TicketService {
     Ticket ResoluTicket(Long id, Long formateurId);
     Ticket modifier(Long id, Ticket ticket);
     String supprimer(Long id);
-    String changerStatut(Long id);
+
+    String changerStatut(Long id, String newStatutNom);
 }
