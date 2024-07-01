@@ -113,7 +113,7 @@ public  class ServiceTicketImpl implements TicketService {
                 }).orElseThrow(() -> new RuntimeException("Ticket non trouvé"));
     }
 
-    private void sendResolutionEmail(Ticket ticket) throws MessagingException {
+    private boolean sendResolutionEmail(Ticket ticket) throws MessagingException {
         Apprenant apprenant = ticket.getApprenant();
         String email = apprenant.getEmail();
         String subject = "Votre ticket a été résolu";
@@ -128,7 +128,13 @@ public  class ServiceTicketImpl implements TicketService {
         helper.setSubject(subject);
         helper.setText(body);
 
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
